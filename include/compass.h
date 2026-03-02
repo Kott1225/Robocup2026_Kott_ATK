@@ -18,11 +18,6 @@ private:
 
 public:
     /**
-     * @brief コンストラクタ：アドレス値の代入
-     */
-    Compass();
-
-    /**
      * @brief センサーの初期化
      */
     void init();

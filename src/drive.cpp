@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "drive.h"
 
-void drive::Setup(int Serialnumber)
+void drive::init(int Serialnumber)
 {
   serial_id = Serialnumber;
   if (serial_id == 0)
@@ -22,7 +22,7 @@ void drive::Setup(int Serialnumber)
   }
 }
 
-String drive::decide_drivepattern(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6)
+void drive::output(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6)
 {
 
   String m1;
@@ -271,7 +271,16 @@ String drive::decide_drivepattern(int id_1, int id_2, int id_3, int id_4, int id
       m6.concat("6R100");
     }
   }
-  return m1 + m2 + m3 + m4 + m5 + m6;
+  drivepattern =  m1 + m2 + m3 + m4 + m5 + m6;
+  if (serial_id == 0) {
+    Serial.println(drivepattern);
+  } else if (serial_id == 1) {
+    Serial1.println(drivepattern);
+  } else if (serial_id == 2) {
+    Serial2.println(drivepattern);
+  } else if (serial_id == 3) {
+    Serial3.println(drivepattern);
+  }
 }
 
 void drive::drive_4omnitranslate(int speed, float direction, float turn)
@@ -294,7 +303,7 @@ void drive::drive_4omnitranslate(int speed, float direction, float turn)
   motor_powers[4] = 0;
   motor_powers[5] = 0;
 
-  decide_drivepattern(motor_powers[0], motor_powers[1], motor_powers[2], motor_powers[3], motor_powers[4], motor_powers[5]);
+  output(motor_powers[0], motor_powers[1], motor_powers[2], motor_powers[3], motor_powers[4], motor_powers[5]);
 }
 
 void drive::drive_4omnirotate(float direction)

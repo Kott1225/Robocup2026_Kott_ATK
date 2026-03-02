@@ -1,10 +1,11 @@
 #include <Arduino.h>
 #include "compass.h"
 
-Compass::Compass() : bno(55, 0x28), targetHeading(0.0) {}
 
 void Compass::init()
 {
+    bno = Adafruit_BNO055(55, 0x28);
+    targetHeading = 0.0;
     if (!bno.begin())
     {
         Serial.println("DSR1603 not found");
