@@ -25,7 +25,7 @@ void robot::init()
 
 void robot::control()
 {
-    direction = cp1.getRawHeading();
+    direction = cp1.getError();
     Serial.println(direction);
     mt.output(100, 100, 100, 100, 100, 100);
     delay(50);
