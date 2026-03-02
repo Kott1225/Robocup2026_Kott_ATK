@@ -1,56 +1,35 @@
-/*
-#include <Arduino.h>
-#include "drive.h"
-#include <SoftwareSerial.h>
-
-MOTA motor;
-SoftwareSerial motorserial(2, 3);
-
-void setup() {
-  Serial.begin(19200);
-  Serial1.begin(19200);
-}
-
-void loop() {
-  String motorstate = motor.turn(100, 100, 100, 100, 100, 100);
-  Serial1.println(motorstate);
-  delay(50);
-}
-*/
 #include <Arduino.h>
 #include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
 
-// DSR1302 (HMC6352) のI2Cアドレス
-int compassAddress = 0x42 >> 1; 
-int reading = 0; 
+// DSR1603 (BNO055) のインスタンス作成。アドレスは通常 0x28
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
+
 void setup() {
-  Wire.begin();
-  Serial.begin(9600); // シリアルモニタ表示用
+  Serial.begin(9600);
   
-  // 連続計測モードに設定
-  Wire.beginTransmission(compassAddress);
-  Wire.write('G');    // RAM書き込みコマンド
-  Wire.write(0x74);   // アドレス
-  Wire.write(0x72);   // 連続モード設定値
-  Wire.endTransmission();
-  delayMicroseconds(70);
-} 
+  // センサーの初期化
+  if(!bno.begin()) {
+    Serial.print("DSR1603が見つかりません。配線を確認してください。");
+    while(1);
+  }
   
+  delay(1000);
+  // 外部クリスタルを使用（精度向上のため）
+  bno.setExtCrystalUse(true);
+}
+
 void loop() {
-  // 2バイト（角度データ）を要求
-  Wire.requestFrom(compassAddress, 2);
-  
-  if(Wire.available() >= 2){
-    // 上位バイトを読み込み、8ビットシフト
-    reading = Wire.read() << 8;
-    // 下位バイトを合成
-    reading += Wire.read();
-    
-    // 0~3599の値を10で割り、0.0~359.9度に変換
-    float degrees = reading / 10.0; 
-    
-    Serial.print("Heading: ");
-    Serial.println(degrees);
-  } 
-  delay(50); // 20Hzで更新
+  // センサーからオイラー角（角度データ）を取得
+  sensors_event_t event;
+  bno.getEvent(&event);
+
+  // 方位角 (Heading) を表示
+  // 0度 = 北, 90度 = 東, 180度 = 南, 270度 = 西
+  Serial.print("Heading: ");
+  Serial.print(event.orientation.x, 1); // 小数点1位まで
+  Serial.println(" degrees");
+
+  delay(100); // 10Hzで更新
 }

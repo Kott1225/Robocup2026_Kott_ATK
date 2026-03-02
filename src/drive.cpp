@@ -1,8 +1,29 @@
-
-#include "Arduino.h"
+#include <Arduino.h>
 #include "drive.h"
 
-String MOTA::turn(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6) {
+void drive::Setup(int Serialnumber)
+{
+  serial_id = Serialnumber;
+  if (serial_id == 0)
+  {
+    Serial.begin(19200);
+  }
+  else if (serial_id == 1)
+  {
+    Serial1.begin(19200);
+  }
+  else if (serial_id == 2)
+  {
+    Serial2.begin(19200);
+  }
+  else if (serial_id == 3)
+  {
+    Serial3.begin(19200);
+  }
+}
+
+String drive::decide_drivepattern(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6)
+{
 
   String m1;
   String m2;
@@ -17,7 +38,8 @@ String MOTA::turn(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6) {
   // 100
   //////////
   ////////
-  if (id_1 == 0) {
+  if (id_1 == 0)
+  {
     m1.concat("1F000");
   }
   else if (id_1 >= 1)
@@ -55,7 +77,8 @@ String MOTA::turn(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6) {
     }
   }
   ///////////
-  if (id_2 == 0) {
+  if (id_2 == 0)
+  {
     m2.concat("2F000");
   }
   else if (id_2 >= 1)
@@ -93,7 +116,8 @@ String MOTA::turn(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6) {
     }
   }
   ///////////
-  if (id_3 == 0) {
+  if (id_3 == 0)
+  {
     m3.concat("3F000");
   }
   else if (id_3 >= 1)
@@ -131,7 +155,8 @@ String MOTA::turn(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6) {
     }
   }
   ///////////
-  if (id_4 == 0) {
+  if (id_4 == 0)
+  {
     m4.concat("4F000");
   }
   else if (id_4 >= 1)
@@ -169,7 +194,8 @@ String MOTA::turn(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6) {
     }
   }
   ///////////
-  if (id_5 == 0) {
+  if (id_5 == 0)
+  {
     m5.concat("5F000");
   }
   else if (id_5 >= 1)
@@ -207,7 +233,8 @@ String MOTA::turn(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6) {
     }
   }
   ///////////
-  if (id_6 == 0) {
+  if (id_6 == 0)
+  {
     m6.concat("6F000");
   }
   else if (id_6 >= 1)
@@ -247,20 +274,29 @@ String MOTA::turn(int id_1, int id_2, int id_3, int id_4, int id_5, int id_6) {
   return m1 + m2 + m3 + m4 + m5 + m6;
 }
 
-
-
-
-
-void MOTA::Setup(int i)
+void drive::drive_4omnitranslate(int speed, float direction, float turn)
 {
-  serial_id = i;
-  if (serial_id == 0) {
-    Serial.begin(19200);
-  } else if (serial_id == 1) {
-    Serial1.begin(19200);
-  } else if (serial_id == 2) {
-    Serial2.begin(19200);
-  } else if (serial_id == 3) {
-    Serial3.begin(19200);
-  }
+  // 1. 度数法をラジアンに変換 (M_PIを使用)
+  target_direction = direction * M_PI / 180.0;
+
+  /*
+   * 2. 各ホイールのパワー計算 (X型配置: 45°, 135°, 225°, 315°)
+   * 位相を M_PI を用いてラジアンで加算します。
+   * 45°  = M_PI / 4.0
+   * 135° = 3.0 * M_PI / 4.0
+   * 225° = 5.0 * M_PI / 4.0
+   * 315° = 7.0 * M_PI / 4.0
+   */
+  motor_powers[0] = speed * sin(target_direction + (M_PI / 4.0)) + turn;       // 前左 (45度)
+  motor_powers[1] = speed * sin(target_direction + (3.0 * M_PI / 4.0)) + turn; // 後左 (135度)
+  motor_powers[2] = speed * sin(target_direction + (5.0 * M_PI / 4.0)) + turn; // 後右 (225度)
+  motor_powers[3] = speed * sin(target_direction + (7.0 * M_PI / 4.0)) + turn; // 前右 (315度)
+  motor_powers[4] = 0;
+  motor_powers[5] = 0;
+
+  decide_drivepattern(motor_powers[0], motor_powers[1], motor_powers[2], motor_powers[3], motor_powers[4], motor_powers[5]);
+}
+
+void drive::drive_4omnirotate(float direction)
+{
 }
