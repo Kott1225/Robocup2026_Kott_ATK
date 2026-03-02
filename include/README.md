@@ -36,4 +36,4 @@ C言語では、ヘッダーファイルのファイル名は .h で終わる名
 - [include構文](https://gcc.gnu.org/onlinedocs/cpp/Include-Syntax.html)
 - [includeの動作](https://gcc.gnu.org/onlinedocs/cpp/Include-Operation.html)
 - [インクルードガード：二重定義の防止](https://gcc.gnu.org/onlinedocs/cpp/Once-Only-Headers.html)
-^ [計算されたインクルード](https://gcc.gnu.org/onlinedocs/gcc-6.5.0/cpp/Computed-Includes.html)
+- [計算されたインクルード](https://gcc.gnu.org/onlinedocs/gcc-6.5.0/cpp/Computed-Includes.html)
