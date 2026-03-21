@@ -303,6 +303,12 @@ void drive::drive_4omnitranslate(int speed, float direction, float turn)
   motor_powers[4] = 0;
   motor_powers[5] = 0;
 
+  // パワーを -100 から 100 の範囲にクランプ
+  for (int i = 0; i < 6; i++) {
+    if (motor_powers[i] > 100) motor_powers[i] = 100;
+    if (motor_powers[i] < -100) motor_powers[i] = -100;
+  }
+
   output(motor_powers[0], motor_powers[1], motor_powers[2], motor_powers[3], motor_powers[4], motor_powers[5]);
 }
 

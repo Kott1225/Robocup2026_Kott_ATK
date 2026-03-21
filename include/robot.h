@@ -8,9 +8,10 @@
 class robot
 {
 private:
-    int IRpins[4] = {0, 0, 0, 0};
+    int IRpins[6] = {0, 0, 0, 0, 0, 0};
     int LINEpins[4] = {0, 0, 0, 0};
     int serial_id = 1;
+    int speed = 100;
 
     float direction = 0.0;
     float IRstates[4] = {0.0, 0.0, 0.0, 0.0};
@@ -20,6 +21,7 @@ private:
 
     Compass cp1;
     drive mt;
+
 public:
     /**
      * @brief コンストラクタ，固定値に対し代入を行う
@@ -35,10 +37,16 @@ public:
     void init();
 
     /**
+     * @brief ロボットから見てボールがどこにあるかを検出する．
+     * @note すべての赤外線センサーの値を読み取ってしきい値をとり，その後もっとも大きなセンサ値を選び返す
+     * @return 一番反応が大きいボールセンサ
+     */
+    int detect_ball();
+
+    /**
      * @brief ロボットのコントロールを行う
      */
     void control();
 };
-
 
 #endif
