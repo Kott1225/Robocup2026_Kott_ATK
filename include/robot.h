@@ -14,8 +14,8 @@ private:
     int speed = 100;
 
     float direction = 0.0;
-    float IRstates[4] = {0.0, 0.0, 0.0, 0.0};
-    float max_IRstates[4] = {2000.0, 2000.0, 2000.0, 2000.0};
+    float IRstates[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    float max_IRstates[6] = {2000.0, 2000.0, 2000.0, 2000.0, 2000.0, 2000.0};
     float LINEstates[4] = {0.0, 0.0, 0.0, 0.0};
     float max_LINEstates[4] = {2000.0, 2000.0, 2000.0, 2000.0};
 

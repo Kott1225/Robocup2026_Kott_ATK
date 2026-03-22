@@ -64,6 +64,4 @@ void robot::control()
     float rotation_power = cp1.getError() * 0.5f;  // ゲインは実験的に調整
 
     mt.drive_4omnitranslate(speed, detect_ball(), rotation_power);
-
-    delay(50);
 }

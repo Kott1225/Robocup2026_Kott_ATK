@@ -14,4 +14,5 @@ void setup()
 void loop()
 {
     Rb1.control();
+    delay(50);
 }
