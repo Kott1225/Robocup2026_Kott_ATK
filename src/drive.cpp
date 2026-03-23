@@ -296,20 +296,14 @@ void drive::drive_4omnitranslate(int speed, float direction, float turn)
    * 225° = 5.0 * M_PI / 4.0
    * 315° = 7.0 * M_PI / 4.0
    */
-  motor_powers[0] = speed * sin(target_direction + (M_PI / 4.0)) + turn;       // 前左 (45度)
-  motor_powers[1] = speed * sin(target_direction + (3.0 * M_PI / 4.0)) + turn; // 後左 (135度)
-  motor_powers[2] = speed * sin(target_direction + (5.0 * M_PI / 4.0)) + turn; // 後右 (225度)
-  motor_powers[3] = speed * sin(target_direction + (7.0 * M_PI / 4.0)) + turn; // 前右 (315度)
+  motor_powers[0] = -speed * sin(-target_direction + (M_PI / 4.0)) + turn;       // 前左 (45度)
+  motor_powers[1] = -speed * sin(-target_direction + (3.0 * M_PI / 4.0)) + turn; // 後左 (135度)
+  motor_powers[2] = -speed * sin(-target_direction + (5.0 * M_PI / 4.0)) + turn; // 後右 (225度)
+  motor_powers[3] = -speed * sin(-target_direction + (7.0 * M_PI / 4.0)) + turn; // 前右 (315度)
   motor_powers[4] = 0;
   motor_powers[5] = 0;
 
-  // パワーを -100 から 100 の範囲にクランプ
-  for (int i = 0; i < 6; i++) {
-    if (motor_powers[i] > 100) motor_powers[i] = 100;
-    if (motor_powers[i] < -100) motor_powers[i] = -100;
-  }
-
-  output(motor_powers[0], motor_powers[1], motor_powers[2], motor_powers[3], motor_powers[4], motor_powers[5]);
+  output(-motor_powers[3], motor_powers[2], motor_powers[0], motor_powers[1], motor_powers[4], motor_powers[5]);
 }
 
 void drive::drive_4omnirotate(float direction)

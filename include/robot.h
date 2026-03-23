@@ -11,13 +11,17 @@ private:
     int IRpins[6] = {0, 0, 0, 0, 0, 0};
     int LINEpins[4] = {0, 0, 0, 0};
     int serial_id = 1;
-    int speed = 100;
+    int speed = 50;
 
     float direction = 0.0;
     float IRstates[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    float max_IRstates[6] = {2000.0, 2000.0, 2000.0, 2000.0, 2000.0, 2000.0};
+    float max_IRstates[6] = {1000.0, 1000.0, 750.0, 750.0, 700.0, 950.0};
     float LINEstates[4] = {0.0, 0.0, 0.0, 0.0};
-    float max_LINEstates[4] = {2000.0, 2000.0, 2000.0, 2000.0};
+    float max_LINEstates[4] = {700.0, 800.0, 500.0, 700.0};
+    float gain = 1.0;
+
+    float previous_ball_angle = 0.0;
+    float filtered_ball_angle = 0.0;
 
     Compass cp1;
     drive mt;
@@ -35,14 +39,6 @@ public:
      * @brief コンパス，モーターモジュールとともに初期化を行う
      */
     void init();
-
-    /**
-     * @brief ロボットから見てボールがどこにあるかを検出する．
-     * @note すべての赤外線センサーの値を読み取ってしきい値をとり，その後もっとも大きなセンサ値を選び返す
-     * @return 一番反応が大きいボールセンサ
-     */
-    int detect_ball();
-
     /**
      * @brief ロボットのコントロールを行う
      */
