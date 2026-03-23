@@ -11,7 +11,7 @@ private:
     int IRpins[6] = {0, 0, 0, 0, 0, 0};
     int LINEpins[4] = {0, 0, 0, 0};
     int serial_id = 1;
-    int speed = 50;
+    int speed = 80;
 
     float direction = 0.0;
     float IRstates[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -19,9 +19,6 @@ private:
     float LINEstates[4] = {0.0, 0.0, 0.0, 0.0};
     float max_LINEstates[4] = {700.0, 800.0, 500.0, 700.0};
     float gain = 1.0;
-
-    float previous_ball_angle = 0.0;
-    float filtered_ball_angle = 0.0;
 
     Compass cp1;
     drive mt;

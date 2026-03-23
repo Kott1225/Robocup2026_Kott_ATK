@@ -48,23 +48,50 @@ void robot::control()
         }
     }
 
-    // IRセンサの最大値とインデックスを同時に探す
-    float max_ir_val = -1;
+    // IRセンサ値をベクター合成で角度計算
+    float max_ratio = -1.0;
+    float sum_x = 0.0;
+    float sum_y = 0.0;
+    float ratio_sum = 0.0;
+
     for (int j = 0; j < 6; j++)
     {
-        float val = analogRead(IRpins[j]);
-        IRstates[j] = val / max_IRstates[j];
-        Serial.print(IRstates[j]);
+        float raw = analogRead(IRpins[j]);
+        float ratio = raw / max_IRstates[j];
+        if (ratio > 1.0) ratio = 1.0;
+        IRstates[j] = ratio;
+
+        Serial.print(ratio);
         Serial.print("\t");
-        if (IRstates[j] > max_ir_val)
+
+        if (ratio > max_ratio)
         {
-            max_ir_val = IRstates[j];
-            ball_posit = j;
+            max_ratio = ratio;
+            ball_posit = j; // センサ番号 0..5
         }
+
+        float angle_rad = j * 60.0 * PI / 180.0; // ラジアンに変換
+        sum_x += ratio * cos(angle_rad);
+        sum_y += ratio * sin(angle_rad);
+        ratio_sum += ratio;
     }
-    Serial.print(max_ir_val);
+
+    float current_angle;
+    if (ratio_sum > 0.0)
+    {
+        // ベクター合成角度
+        float vector_angle_rad = atan2(sum_y, sum_x);
+        current_angle = vector_angle_rad * 180.0 / PI; // 度に変換
+        if (current_angle < 0) current_angle += 360.0; // 0-360範囲
+    }
+    else
+    {
+        current_angle = 0.0; // デフォルト
+    }
+
+    Serial.print(max_ratio);
     Serial.print("\t");
-    Serial.println(ball_posit);
+    Serial.println(current_angle);
     if (max_line_val > 0.7)
     {
         ball_posit = (lineside * 90 + 180) % 360;
@@ -75,7 +102,6 @@ void robot::control()
     }
     else
     {
-        ball_posit = ball_posit * 60;
-        mt.drive_4omnitranslate(speed, ball_posit, gain * cp1.getError() * (100.0 / 180.0));
+        mt.drive_4omnitranslate(speed, current_angle, gain * cp1.getError() * (100.0 / 180.0));
     }
 }
