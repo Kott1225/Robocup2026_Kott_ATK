@@ -11,11 +11,11 @@ private:
     int IRpins[6] = {0, 0, 0, 0, 0, 0};
     int LINEpins[4] = {0, 0, 0, 0};
     int serial_id = 1;
-    int speed = 80;
+    int speed = 85;
 
     float direction = 0.0;
     float IRstates[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    float max_IRstates[6] = {1000.0, 1000.0, 750.0, 750.0, 700.0, 950.0};
+    float max_IRstates[6] = {1023.0, 1023.0, 1019.0, 1023, 1000.0, 974.0};
     float LINEstates[4] = {0.0, 0.0, 0.0, 0.0};
     float max_LINEstates[4] = {700.0, 800.0, 500.0, 700.0};
     float gain = 1.0;
@@ -40,6 +40,24 @@ public:
      * @brief ロボットのコントロールを行う
      */
     void control();
+    
+    /**
+     * @brief IRセンサの自動キャリブレーション (起動時)
+     * @param calibration_time_ms キャリブレーション時間 (ミリ秒)
+     */
+    void calibrateIRSensors(unsigned long calibration_time_ms = 2000);
+    
+    /**
+     * @brief キャリブレーション済みの最大値を取得
+     * @param sensor_index センサインデックス (0-5)
+     * @return キャリブレーション値
+     */
+    float getMaxIRValue(int sensor_index);
+    
+    /**
+     * @brief キャリブレーション値を表示 (Serial経由)
+     */
+    void printCalibrationValues();
 };
 
 #endif

@@ -1,5 +1,6 @@
 #define MAIN_CODE
 //#define TEST_CODE
+//#define CALIBRATION
 
 #ifdef MAIN_CODE
 #include <Arduino.h>
@@ -12,7 +13,6 @@ robot Rb1(pin_IRsensor, pin_LINEsensor, 1);
 
 void setup()
 {
-    Serial.print(9600);
     Rb1.init();
 }
 
