@@ -1,5 +1,5 @@
 #define MAIN_CODE
-//define TEST_CODE
+//#define TEST_CODE
 //#define CALIBRATION
 
 #ifdef MAIN_CODE
