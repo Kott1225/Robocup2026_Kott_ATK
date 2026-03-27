@@ -1,5 +1,5 @@
 #define MAIN_CODE
-//#define TEST_CODE
+//define TEST_CODE
 //#define CALIBRATION
 
 #ifdef MAIN_CODE
@@ -26,21 +26,18 @@ void loop()
 
 #ifdef TEST_CODE
 #include <Arduino.h>
+#include "drive.h"
 
-int pins[6] = {A0, A1, A2, A3, A4, A5};
-
+drive mt1;
 void setup()
 {
     Serial.begin(9600);
+    mt1.init(1);
 }
 
 void loop()
 {
-    for(int i= 0; i < 6; i++)
-    {
-        Serial.print(analogRead(pins[i]));
-        Serial.print("\t");
-    }
-    Serial.println("\t");
+    mt1.drive_4omnitranslate(80, 0, 0);
+    delay(10);
 }
 #endif
